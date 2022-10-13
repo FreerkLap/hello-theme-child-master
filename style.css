@@ -1,0 +1,248 @@
+/* 
+Theme Name: Hello Elementor Child
+Theme URI: https://github.com/elementor/hello-theme/
+Description: Hello Elementor Child is a child theme of Hello Elementor, created by Elementor team
+Author: Elementor Team
+Author URI: https://elementor.com/
+Template: hello-elementor
+Version: 1.0.1
+Text Domain: hello-elementor-child
+License: GNU General Public License v3 or later.
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Tags: flexible-header, custom-colors, custom-menu, custom-logo, editor-style, featured-images, rtl-language-support, threaded-comments, translation-ready
+*/
+
+/*
+    Add your custom styles here
+*/
+
+
+/*  Table styling */
+table td, table th {
+    padding: 6px 3px;
+    line-height: 1.67;
+    vertical-align: middle;
+    border: none;
+    border-bottom: 1px solid var(--e-global-color-47cd240);
+    text-align: left;
+    font-size: 14px;
+}
+
+table tbody>tr:nth-child(odd)>td, table tbody>tr:nth-child(odd)>th {
+    background-color: #fff;
+}
+
+/*Remove Breadcrumbs on Desktop and Mobile*/
+.woocommerce-breadcrumb {
+display: none;
+}
+
+.single-product .ts-reviewSummary-averageRating {
+    display: none !important;
+}
+
+/* Cookiebar styling */
+.cli-style-v2 .cli-bar-btn_container .cli-plugin-button {
+    text-decoration: none;
+    line-height:1em;
+}
+
+.cli-tab-header a.cli-nav-link {
+    font-size: 16px;
+    text-decoration: none;
+
+}
+
+/* Single product styling */
+.elementor-jet-single-add-to-cart .woocommerce-variation-price .price .amount { 
+    font-size: 1.3em; 
+    font-weight: bold; 
+		font-family:"Sailspecials Font";
+		color:black;
+}
+
+.shortcode-price {
+	font-size:1.5em;
+	font-weight:bold;
+	font-family: "Sailspecials Font";
+	color:black;
+}
+
+.shortcode-price del {
+	color:var(--e-global-color-text);
+	font-weight:400;
+	margin-right:5px;
+	font-family: "Sailspecials Font";
+}
+
+.shortcode-price ins {
+	text-decoration:none;
+}
+
+
+.variations select {
+    font-size: 16px!important;
+    padding: 6px!important;
+}
+.variations tr {
+    display: flex;
+	  flex-direction: row;
+}
+.variations td.value {
+    margin-left: auto;
+}
+
+.variations tbody tr th.label {
+	margin:0px;
+	padding-bottom:0px
+}
+
+@media screen and (max-width: 400px) {
+	
+	.woo-variation-swatches.wvs-style-squared .variable-items-wrapper .variable-item.button-variable-item {
+			height:auto;
+		width:100%;
+		text-align: left;
+		}
+
+	table.variations th.label, .variations tr {
+		display: block;
+		padding:0px;
+		margin:0px
+	}
+
+	td.value.woo-variation-items-wrapper {
+		display:block;
+	}
+
+/*  Wrap grote tables in een div met deze class voor horizontale scroll*/
+.table-overflow-x {
+	overflow-x: auto;
+	width:100%%;
+}
+
+
+
+/* Trusted Shops Reviews Single Product page */
+.ts-rating-light.productreviews * {
+    font-family: 'Sailspecials Font'!important;
+    font-size: 16px!important;
+}
+
+.ts-header-title {
+    display:none;
+}
+
+.ts-header-description {
+    display: none;
+}
+
+.ts-rating-light.productreviews .ts-wrapper .ts-header .ts-header-filter-dropdown {
+    margin-bottom:20px;
+}
+
+.ts-header-subtitle {
+    display:none;
+}
+
+.ts-rating-light.productreviews {    padding: 0;
+    position: relative;
+    border-top: 0px!important;
+    border-right: 0px!important;
+    border-left: 0px!important;
+    background-color: #fff!important;
+    box-sizing: border-box;
+}
+
+.ts-rating-light.productreviews .ts-footer {
+    display: block;
+    width: 100%;
+    height: 15px;
+    background-color: #fff!important;
+    box-sizing: content-box;
+}
+
+.ts-rating-light.productreviews .ts-wrapper .ts-center-pagination .ts-reviews-pagination li.ts-pagination-current-page {
+    font-weight: 700;
+    line-height: 2;
+}
+
+/* WooCommerce shop  message  */
+.woocommerce-error, .woocommerce-info, .woocommerce-message {
+    border: none;
+    background-color: #fff;
+    color:#239F20;
+    padding: 15px 0px 20px 50px;
+    margin: 0px 0px 0px -14px;
+    font-weight:bold;
+}
+.woocommerce-message::before {
+    content:'✓'';
+    color: #239F20;
+}
+/*  WooCommerce Checkout banner alerts styling*/
+.jet-woo-builder-woocommerce-checkout {
+    background: var( --e-global-color-secondary ) !important;
+}
+.woocommerce-checkout {
+    max-width: 1140px;
+    margin: 0 auto;
+    background: white;
+}
+.woocommerce-NoticeGroup-checkout {
+    padding: 0 20px;
+    background: white;
+}
+.woocommerce-checkout {
+    background: var( --e-global-color-secondary );
+}
+
+/*  Clerk products */ 
+selector .clerk-product-name {
+    color:#555;
+}
+
+/*  Heading  spacing in content*/
+div > .elementor-text-editor h2, div > .elementor-text-editor h3, div > .elementor-text-editor h4 {
+    padding-top:20px;
+} 
+
+/*  WooCommerce button colors  */
+.woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button {
+	font-weight:500!important;
+	margin-top:20px;
+}
+
+.woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt {
+    background-color: var(--e-global-color-accent)!important;
+    border: 1px solid var(--e-global-color-a4c9ca9);
+}
+
+.woocommerce #respond input#submit.alt:hover, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover {
+	    background-color: var(--e-global-color-a4c9ca9)!important;
+}
+
+/*  List styling */
+ol, ul {
+	margin-bottom:16px;
+}
+
+/*  Trusted Shops Aankoopbescherming*/
+div [id^="trustcard"], div[id^="minimized-trustbadge"] {
+	display:none!important;
+} 
+
+/*  Single product afbeelding gallerij op mobiel */
+
+@media (max-width: 767px) {
+.jet-woo-product-gallery__image img {
+    vertical-align: middle;
+    height: 200px!important;
+    object-fit: contain!important;
+}
+}
+
+/*  Wishlist hartjes styling */
+.jet-wishlist-button__plane-normal, .jet-wishlist-button__plane-added {
+	background-color:#ffffff00;
+}
