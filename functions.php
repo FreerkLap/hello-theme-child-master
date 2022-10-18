@@ -30,43 +30,22 @@ add_action( 'edited_terms', function() {
 
 });
 
-add_shortcode('mkb-menu-new', function () {
+
+add_shortcode('mkb-menu-desktop', function () {
     ob_start();
-    $id = 'global';
-    require 'templates/menu_new.php';
+    require 'templates/menu_new_desktop.php';
     $contents = ob_get_contents();
     ob_clean();
 
     return $contents;
 });
 
-add_shortcode('mkb-home-menu', function () {
+add_shortcode('mkbws-mobile-menu', function () {
     ob_start();
-    $display = 'home';
-    $id = 'home';
-    require 'templates/menu.php';
+    require 'templates/menu_new_tabmob.php';
     $contents = ob_get_contents();
     ob_clean();
     return $contents;
-});
-
-add_shortcode('mkb_mobile_menu_button', function () {
-    return <<<PHP
-    <div class="js-show-mobile-menu" style="color: white; display: inline-flex; flex-direction: column; align-items: center; padding: 5px 5px 0 5px;">
-        <div class="hamburger" style="display: inline-flex; height: 25px;">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width: 25px; height: 25px; color: rgba(255, 255, 255, 0.8)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </div>
-
-        <div class="close" style="display: none; height: 25px;">
-            <svg xmlns="http://www.w3.org/2000/svg" style="width: 25px; height: 25px; color: rgba(255, 255, 255, 0.8)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </div>
-        <span style="text-transform: uppercase; font-family: 'Sailspecials Font'; color: rgba(255, 255, 255, 0.8); font-size: 12.8px; font-weight: 500; letter-spacing: 0.64px; line-height: 15.36px;">Menu</span>
-    </div>
-    PHP;
 });
 
 function get_mkb_term_image_src($term_id, $size = 'woocommerce_gallery_thumbnail', $icon = false)
@@ -279,6 +258,9 @@ function mkbws_checkout_cart_totals()
 	exit();
 }
 
+add_filter('show_admin_bar', '__return_false');
+
+
 add_action( 'wp_ajax_mkbws_checkout_cart_totals', 'mkbws_checkout_cart_totals');
 add_action( 'wp_ajax_nopriv_mkbws_checkout_cart_totals', 'mkbws_checkout_cart_totals');
 // Einde Custom Woo Checkout script
@@ -293,24 +275,6 @@ function mkbws_count_product_page_product_videos() {
 
     return count($items);
 }
-
-/**
- * Fix empty price for variable products on catalogue pages in WooCommerce
- *
- * https://wolfundbaer.ch/en/blog/fix-empty-price-for-variable-products-on-catalogue-pages-in-woocommerce/
- */
-/**
-add_filter( 'woocommerce_get_price_html', 'resync_variable_product', 100, 2 );
-function resync_variable_product( $price, $product ){
-
-	if (empty($price)){
-		error_log('resyncing variable product ' .$product->get_id());
-		WC_Product_Variable::sync($product->get_id());
-	}
-
-	return $price;
-}
-*/
 
 /**
  * FIX Woocommerce - Checkout

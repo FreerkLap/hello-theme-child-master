@@ -1,9 +1,29 @@
-<div id="mkbws-products-menu" class='elementor-shortcode'>
+<!-- 
+    Main menu for Sailspecials (desktop).
+    PHP by Uteq, HTML/CSS/JS by MKBWatersport 
+    Using alpine.js for interactivity.
+-->
+
+<div id="" class=''>
     <ul class="mkbws-products-menu">
         <?php foreach (get_mkb_wc_grouped_product_categories() as $category) : ?>
 
             <!-- Main menu item -->
-            <li class="mkbws-products-menu-li mkbws-debug" data-id="<?php echo $category->term_id; ?>" x-data="{ mouseOverSub : false, mouseOverMain  : false}" @mouseenter="mouseOverMain = true" @mouseleave="mouseOverMain = false">
+            <li class="mkbws-products-menu-li" 
+                data-id="<?php echo $category->term_id; ?>" 
+                x-data="{ 
+                    subMenuOpen : false, 
+                    mouseAtSubmenu : false, 
+                    mouseAtMainmenu  : false,
+                    timeoutLeave : null,
+                    timeoutEnterSub : null,
+                    submenuClose() {
+                                this.subMenuOpen = false
+                        }
+                    }" 
+                @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)"
+                @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)"
+            >
                 <div class="mkbws-menu-main-cat-dropdown">
                     <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
                         <div class="mkbws-main-menu-title">
@@ -17,10 +37,26 @@
                 </div>
 
                 <!-- Submenu elements -->
-                <!-- <div x-cloak x-show="mouseOverMain" @mouseover="mouseOverSub = true" x-transition.opacity.duration.500ms class="subcategory-container mkbws-debug" id="mkbws-submenu-container-<?php echo $category->term_id; ?>" data-id="submenu-<?php echo $category->term_id; ?>"> -->
-                <div class="subcategory-container mkbws-debug" id="mkbws-submenu-container-<?php echo $category->term_id; ?>" data-id="submenu-<?php echo $category->term_id; ?>">
+                <div 
+                    x-cloak
+                    x-show="subMenuOpen"
+                    @mouseenter="mouseAtSubmenu = true, mouseAtMainmenu = false, clearTimeout(timeoutLeave)" 
+                    @mouseleave="mouseAtSubmenu = false"
+                    class="subcategory-container" 
+                    id="mkbws-submenu-container-<?php echo $category->term_id; ?>" 
+                    data-id="submenu-<?php echo $category->term_id; ?>"
+                >
                     <div class="submenu-header">
-                        <span><a href="<?php echo home_url(); ?>"><img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Home" width="15px"></i> Home</a></span> <span><i class="fas fa-chevron-right"></i> <a href="<?php echo get_category_link($category->term_id); ?>"><?php echo $category->name; ?></a></span>
+                        <span>
+                            <a href="<?php echo home_url(); ?>">
+                                <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Home" width="15px"></i> Home</a>
+                        </span>
+                        <span>
+                            <i class="fas fa-chevron-right"></i>
+                            <a href="<?php echo get_category_link($category->term_id); ?>">
+                                <?php echo $category->name; ?>
+                            </a>
+                        </span>
                     </div>
 
                     <div class="submenu-content-container">
@@ -36,12 +72,24 @@
                             <?php endforeach ?>
                         </ul>
 
-                        <div class="helpdesk" x-data>
+                        <div 
+                            :class="subMenuOpen ? 'helpdesk-visible' : 'helpdesk-hidden' " 
+                            class="helpdesk" 
+                            x-data
+                        >
                             <span class="helpdesk-header">
                                 <img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/aartjan.jpeg" style="width: 40px; height: 40px; border-radius: 50%;" />
                                 <h3 style="color: white; line-height: 1em; padding-top: 5px;">Hulp nodig?</h3>
                             </span>
-                            <p>Onze klantenservice is <b x-if="$store.officeHours.isStoreOpen" style="color:lime;">bereikbaar</b> {$store.officeHours.isStoreOpen}</p>
+                            <p x-show="$store.officeHours.storeIsOpen">
+                                Onze klantenservice is <b style="color:lime;">bereikbaar</b>
+                            </p>
+                            <p x-show="!$store.officeHours.storeIsOpen">
+                                We zijn er 
+                                <b x-show="$store.officeHours.dayOfTheWeek >= 5 || $store.officeHours.dayOfTheWeek < 1 ">maandag</b>
+                                <b x-show="$store.officeHours.dayOfTheWeek >= 1 || $store.officeHours.dayOfTheWeek < 5 ">morgen</b>
+                                weer vanaf <b>09:00 uur</b>
+                            </p>
                             <ul class="helpdesk-list">
                                 <li class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/telefoon-icon.svg" /> <a href="tel:+31757572600" id="helpdesk-call" target="_blank">075-7572600</a></li>
                                 <li class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/chat-icon.svg" /> <span onclick="Belco.open('chat')" id="helpdesk-chat">Chat starten </span></li>
@@ -50,6 +98,8 @@
                             </ul>
 
                         </div>
+
+
                     </div>
                 </div>
             </li>
@@ -63,22 +113,27 @@
         display: none !important;
     }
 
+    .mkbws-products-menu {
+        font-family: var(--e-global-typography-text-font-family), proxima-nova, arial, sans-serif !important;
+        z-index: 999;
+    }
+
     ul.mkbws-products-menu {
         display: flex;
-        align-items: center;
-        flex-wrap: wrap;
+        align-items: stretch;
+        flex-wrap: nowrap;
         padding-inline-start: 0;
-        justify-content: space-between;
-        gap: 5px;
-        margin: 10px auto;
+        justify-content: flex-start;
+        gap: 0px;
     }
 
     .mkbws-menu-main-cat-dropdown {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 0px;
+        margin-top: auto;
+        position: relative;
     }
 
     ul.subcategory {
@@ -87,8 +142,9 @@
         grid-gap: 10px;
         padding: 10px;
         margin: 0;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
         width: 100%;
+        grid-auto-rows: max-content;
     }
 
     li.subcategory-li {
@@ -105,6 +161,13 @@
         align-content: center;
         gap: 10px;
         font-size: 16px;
+        transition-delay: 0.1s;
+        transition-duration: 0.3s;
+        box-shadow: 0px 0px 0px -5px black;
+    }
+
+    li.subcategory-li:hover {
+        box-shadow: 0px 3px 10px -5px black;
     }
 
     .subcategory-container {
@@ -112,7 +175,10 @@
         display: block;
         position: absolute;
         left: 0;
+        top:40px;
         width: 100%;
+        text-align: left;
+        box-shadow: 0px 20px 25px -20px rgb(0 0 0 / 50%);
     }
 
     .submenu-content-container {
@@ -125,6 +191,15 @@
         padding: 10px 20px;
         background-color: var(--e-global-color-primary);
         color: white;
+    }
+
+    .helpdesk-visible {
+        visibility: visible;
+    }
+
+    .helpdesk-hidden {
+        visibility: hidden;
+        transition-delay: 0.5s;
     }
 
     .helpdesk-header {
@@ -157,9 +232,22 @@
     }
 
     li.mkbws-products-menu-li {
+        display: flex;
         list-style-type: none;
-        padding: 0;
-        margin: 0;
+        padding: 5px 10px;
+        background-color: var(--e-global-color-secondary);
+        text-align: center;
+    }
+
+    li.mkbws-products-menu-li:hover {
+        list-style-type: none;
+        padding: 5px 10px;
+        background-color: white;
+    }
+
+    a.menu-link.menu-link-item {
+        color: var(--e-global-color-text);
+        font-weight: bold;
     }
 
     .mkbws-main-menu-title {
@@ -180,29 +268,45 @@
     .mkbws-debug {
         border: 1px solid lime;
     }
+
+    .submenu-enter {
+        transition-delay: 0ms;
+        transition-duration: 0.5s;
+        opacity: 100;
+    }
+
+    .submenu-leave {
+        transition-delay: 500ms;
+        transition-duration: 0.5s;
+        opacity: 0;
+    }
 </style>
 
-<script src="https://unpkg.com/alpinejs" defer></script>
-<script type="application/javascript" defer>
+<script src="https://unpkg.com/alpinejs@3.10.4/dist/cdn.min.js" async></script>
+
+<script type="application/javascript" async>
+    var officeTimes = {
+        dailyOpenFrom : 9,
+        dailtOpenTo : 17,
+        weeklyOpenFrom : 1,
+        weeklyOpenTo : 5,
+        currentDate : function() {return new Date()},
+        currentDay : function() {return this.currentDate().getDay()},
+        currentHour : function() {return this.currentDate().getHours()}
+    }
+
     let isStoreOpen = function() {
-        const dailyOpenFrom = 9
-        const dailtOpenTo = 17
-        const weeklyOpenFrom = 1
-        const weeklyOpenTo = 5
-        const currentDate = new Date();
-        const currentDay = currentDate.getDay();
-        const currentHour = currentDate.getHours();
+        const isBetweenOpenDays = officeTimes.currentDay() >= officeTimes.weeklyOpenFrom && officeTimes.currentDay() <= officeTimes.weeklyOpenTo;
+        const isBetweenOpenHours = officeTimes.currentHour() >= officeTimes.dailyOpenFrom && officeTimes.currentHour() <= officeTimes.dailtOpenTo;
 
-        const isBetweenOpenDays = currentDay >= weeklyOpenFrom && currentDay <= weeklyOpenTo;
-        const isBetweenOpenHours = currentHour >= dailyOpenFrom && currentHour <= dailtOpenTo;
-
-        return isBetweenOpenDays && isBetweenOpenHours;
-    };
+        return (
+            isBetweenOpenDays && isBetweenOpenHours )
+    }
 
     document.addEventListener('alpine:init', () => {
         Alpine.store('officeHours', {
             storeIsOpen: isStoreOpen(),
-
+            dayOfTheWeek : officeTimes.currentDay()
         })
     })
 </script>
