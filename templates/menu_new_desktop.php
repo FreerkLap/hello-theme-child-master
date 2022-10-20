@@ -22,7 +22,7 @@
                     submenuClose() {this.subMenuOpen = false}}" 
                 @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)" 
                 @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)"
-                @touchstart.passive="ifTouchStart()"
+                @touchstart.passivehello-="ifTouchStart()"
                 >
                 <div class="mkbws-menu-main-cat-dropdown">
                     <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
