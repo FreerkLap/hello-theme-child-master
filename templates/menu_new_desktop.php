@@ -11,29 +11,15 @@
             <!-- Main menu item -->
             <li class="mkbws-products-menu-li" 
                 data-id="<?php echo $category->term_id; ?>" 
-                x-data="{ 
-                    subMenuOpen : false, 
-                    mouseAtSubmenu : false, 
-                    mouseAtMainmenu  : false,
-                    timeoutLeave : null,
-                    timeoutEnterSub : null,
-                    submenuClose() {
-                                this.subMenuOpen = false
-                        }
-                    }" 
-                @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)"
-                @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)"
-            >
+                x-data="{subMenuOpen : false, mouseAtSubmenu : false, mouseAtMainmenu  : false, timeoutLeave : null, timeoutEnterSub : null, submenuClose() {this.subMenuOpen = false}}" @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)" @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)">
                 <div class="mkbws-menu-main-cat-dropdown">
                     <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
                         <div class="mkbws-main-menu-title">
                             <?php echo $category->name; ?>
                         </div>
                     </a>
-
                     <!-- Dropdown chevron -->
                     <i class="fas fa-chevron-down"></i>
-
                 </div>
 
                 <!-- Submenu elements -->

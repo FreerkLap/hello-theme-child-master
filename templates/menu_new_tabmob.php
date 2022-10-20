@@ -3,7 +3,8 @@
     PHP by Uteq, HTML/CSS/JS by MKBWatersport 
     Using alpine.js for interactivity.
 -->
-<div id="mkbws-mobile-header-wrapper" x-data="mobileMenu">
+<div id="mobile-menu-site-wrapper" x-data="{mainMenu : false, subMenu : false}">
+    <div id="mkbws-mobile-header-wrapper">
     <a href="https://sailspecials-staging.local" style="width:200px;">
         <img width="200" height="auto" src="https://sailspecials-staging.local/wp-content/uploads/2021/09/sailspecials_liggend_wit.svg" 
             class="attachment-medium size-medium" 
@@ -15,6 +16,7 @@
         <input type="text" name="s" placeholder="Zoek een product" id="live_search_header">
         <input type="hidden" name="post_type" value="product">
     </form>
+    
 
     <div class="mkbws-mobile-header-menu-group">
         <a  href="https://sailspecials-staging.local/my-account/" style="width:24px; height:24px;">
@@ -25,97 +27,103 @@
             <i class="fas fa-shopping-cart" style='font-size:24px; color:white;'></i>
         </a>
 
-        <div id="mobile-menu" @click="toggle">
-            <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 6h-24v-4h24v4zm0 4h-24v4h24v-4zm0 8h-24v4h24v-4z"/></svg>
-            <svg x-show="open" x-cloak xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/></svg>
+        <div id="mobile-menu" @click="mainMenu = !mainMenu">
+            <div x-show="!mainMenu">    
+                <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 6h-24v-4h24v4zm0 4h-24v4h24v-4zm0 8h-24v4h24v-4z"/></svg>
+            </div>        
+            <div x-show="mainMenu">
+            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/></svg>
+            </div>
             <span>Menu</span>
         </div>
     </div>
-</div>
+    </div>
+    
+    <div id="mobile-menu-wrapper" x-show="mainMenu" @click.prevent="mainMenu && !subMenu ? mainMenu = false : ''">
+    </div>
 
-<div id="mkbws-products-menu-mobile" x-data="mobileMenu" x-show="open" x-cloak >
-    <div class="mobile-menu-header">    
-        <div @click.prevent="open = false" style="cursor:pointer; padding:10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/>
-            </svg>
+    <div id="mkbws-products-menu-mobile" x-show="mainMenu" x-transition:enter-start="submenu-slideout" x-transition:enter-end="submenu-slidein" x-transition:leave-start="submenu-slidein" x-transition:leave-end="submenu-slideout">
+        <div class="mobile-menu-header">
+            <span>
+                <a href="<?php echo home_url(); ?>">
+                    <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Home" width="15px"></i> 
+                    <i class="fas fa-chevron-left"></i>
+                    Home
+                </a>
+            </span>
+
+            <div @click.prevent="mainMenu = false, subMenu = false" style="cursor:pointer; padding:10px 10px 0px 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/>
+                </svg>
+            </div>
+        </div>
+        <ul class="mkbws-products-menu-mobile">
+            <h3>Product categorieën</h3>
+            <?php foreach (get_mkb_wc_grouped_product_categories() as $category) : ?>
+
+                <!-- Main menu item -->
+                <li class="mkbws-products-menu-mobile-li" data-id="<?php echo $category->term_id; ?>" x-data="{submenuOpen : false}" @click.self="submenuOpen = true, subMenu = true">
+                    <div class="mkbws-menu-main-cat-dropdown-mobile" @click.prevent="submenuOpen = true, subMenu = true">
+                        <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
+                            <div class="mkbws-main-menu-title">
+                                <?php echo $category->name; ?>
+                            </div>
+                        </a>
+                        <!-- Dropdown chevron -->
+                        <i class="fas fa-chevron-right" style="margin-left: 10px; color:var(--e-global-color-secondary)"></i>
+
+                    </div>
+
+                    <!-- Submenu elements -->
+                    <div x-cloak x-show="submenuOpen" @click.outside="submenuOpen = false, subMenu = false" x-transition:enter-start="submenu-slideout" x-transition:enter-end="submenu-slidein" x-transition:leave-start="submenu-slidein" x-transition:leave-end="submenu-slideout" class="subcategory-mobile-container" id="mkbws-submenu-container-<?php echo $category->term_id; ?>" data-id="submenu-<?php echo $category->term_id; ?>">
+                        <div class="mobile-menu-header" @click="submenuOpen = false, subMenu = false">
+                            <span>
+                                <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Home" width="15px"></i> 
+                                <i class="fas fa-chevron-left"></i>
+                                Alle categorieën
+                            </span>
+
+                            <div style="cursor:pointer; padding:10px 10px 0px 10px;" @click.prevent.stop="mainMenu = false, subMenu = false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="submenu-content-container">
+                            <ul class="subcategory-mobile">
+                            <a href="<?php echo get_category_link($category->term_id); ?>">
+                                <h3>
+                                        <?php echo $category->name; ?>
+                                </h3>
+                            </a>
+
+                                <?php foreach ($category->categories as $sub) : ?>
+                                    <a href="<?php echo get_category_link($sub->term_id); ?>" class="subcategory-mobile-link" @click.stop="">
+                                        <li class="subcategory-mobile-li">
+                                            <img src="<?php echo $sub->image[0]; ?>" width="30" height="30" alt="Categorie <?php echo $sub->name; ?>" />
+                                            <?php echo $sub->name; ?>
+                                        </li>
+                                    </a>
+
+                                <?php endforeach ?>
+                            </ul>
+
+
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach ?>
+        </ul>
+        <div class="mobile-menu-footer">
+            <div>Item</div>
+            <div>item</div>
+            <div>item</div>
         </div>
     </div>
-    <ul class="mkbws-products-menu-mobile">
-        <?php foreach (get_mkb_wc_grouped_product_categories() as $category) : ?>
-
-            <!-- Main menu item -->
-            <li class="mkbws-products-menu-mobile-li" 
-                data-id="<?php echo $category->term_id; ?>" 
-                x-data="{ 
-                    subMenuOpen : false, 
-                    mouseAtSubmenu : false, 
-                    mouseAtMainmenu  : false,
-                    timeoutLeave : null,
-                    timeoutEnterSub : null,
-                    submenuClose() {
-                                this.subMenuOpen = false
-                        }
-                    }" 
-                @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)"
-                @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)"
-            >
-                <div class="mkbws-menu-main-cat-dropdown-mobile">
-                    <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
-                        <div class="mkbws-main-menu-title">
-                            <?php echo $category->name; ?>
-                        </div>
-                    </a>
-
-                    <!-- Dropdown chevron -->
-                    <i class="fas fa-chevron-down"></i>
-
-                </div>
-
-                <!-- Submenu elements -->
-                <div 
-                    x-cloak
-                    x-show="subMenuOpen"
-                    @mouseenter="mouseAtSubmenu = true, mouseAtMainmenu = false, clearTimeout(timeoutLeave)" 
-                    @mouseleave="mouseAtSubmenu = false"
-                    class="subcategory-mobile-container" 
-                    id="mkbws-submenu-container-<?php echo $category->term_id; ?>" 
-                    data-id="submenu-<?php echo $category->term_id; ?>"
-                >
-                    <div class="submenu-header">
-                        <span>
-                            <a href="<?php echo home_url(); ?>">
-                                <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Home" width="15px"></i> Home</a>
-                        </span>
-                        <span>
-                            <i class="fas fa-chevron-right"></i>
-                            <a href="<?php echo get_category_link($category->term_id); ?>">
-                                <?php echo $category->name; ?>
-                            </a>
-                        </span>
-                    </div>
-
-                    <div class="submenu-content-container">
-                        <ul class="subcategory-mobile">
-                            <?php foreach ($category->categories as $sub) : ?>
-                                <a href="<?php echo get_category_link($sub->term_id); ?>" class="subcategory-mobile-link">
-                                    <li class="subcategory-mobile-li">
-                                        <img src="<?php echo $sub->image[0]; ?>" width="30" height="30" alt="Categorie <?php echo $sub->name; ?>" />
-                                        <?php echo $sub->name; ?>
-                                    </li>
-                                </a>
-
-                            <?php endforeach ?>
-                        </ul>
-
-
-                    </div>
-                </div>
-            </li>
-        <?php endforeach ?>
-    </ul>
 </div>
-
+<!-- Mobile searchbar -->
 <form action="https://sailspecialsdev.local/" method="get" id="search_form_header" class="search-form-mobile">
         <input type="text" name="s" placeholder="Zoek een product" id="live_search_header">
         <input type="hidden" name="post_type" value="product">
@@ -135,6 +143,21 @@
         padding: 10px;
         align-items: center;
         gap: 20px;
+    }
+
+    #mobile-menu-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom:0 ;
+        background-color: white;
+        opacity: 50%;
+        -webkit-filter: blur(5px);
+        -moz-filter: blur(5px);
+        -o-filter: blur(5px);
+        -ms-filter: blur(5px);
+        filter: blur(5px);
     }
 
     .mkbws-mobile-header-menu-group {
@@ -165,6 +188,7 @@
 
     .search-form-tablet {
         width: 100%;
+        max-width: 500px;
     }
 
 
@@ -181,17 +205,17 @@
     }
 
     #mkbws-products-menu-mobile {
-       position: fixed;
-       top: 0;
-       left: 0;
-       width: 80%;
-       z-index: 999;
-       height: 100vh;
-       background-color: var(--e-global-color-secondary);
-
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        max-width: 330px;
+        background-color: var(--e-global-color-secondary);
+        z-index: 2147483000;
     }
 
-    @media screen and (min-width: 1130px) {
+    @media screen and (min-width: 1131px) {
         #mkbws-products-menu-mobile, .mobile-menu {
             display: none;
         }
@@ -221,19 +245,27 @@
 
     .mobile-menu-header {
         width: 100%;
-        padding: 20px;
+        padding: 0px 10px 0px 20px;
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        color: var(--e-global-color-primary);
+        font-weight: 600;
     }
-    .mobile-menu-header div {
-        cursor: pointer;
+
+    .mobile-menu-header a {
+        font-weight: 600;
+
     }
-    
+
+    .mobile-menu-header .fas {
+        color: var(--e-global-color-text);
+    }    
 
     .mkbws-products-menu-mobile {
         font-family: var(--e-global-typography-text-font-family), proxima-nova, arial, sans-serif !important;
-        z-index: 999;
         overflow-y: scroll;
     }
 
@@ -241,10 +273,9 @@
         display: flex;
         align-items: stretch;
         flex-wrap: nowrap;
-        padding-inline-start: 0;
-        justify-content: flex-start;
-        gap: 0px;
+        gap: 10px;
         flex-direction: column;
+        padding:10px;
     }
 
     .mkbws-menu-main-cat-dropdown-mobile {
@@ -258,14 +289,36 @@
     }
 
     ul.subcategory-mobile {
-        display: grid;
+        display: flex;
         background-color: var(--e-global-color-secondary);
-        grid-gap: 10px;
         padding: 10px;
         margin: 0;
-        grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
         width: 100%;
-        grid-auto-rows: max-content;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        overflow-y: scroll;
+        gap: 10px;
+        z-index: 999;
+        height: calc(100vh - 150px);
+    }
+
+    .submenu-slideout {
+        transform:translateX(100%);
+        transition: transform .5s ease;
+    }
+
+    .submenu-slidein {
+        transform: translateX(0%);
+        transition: transform .5s ease;
+
+    }
+
+    ul.mkbws-products-menu-mobile h3 {
+        color:var(--e-global-color-primary); 
+        line-height: 1em; 
+        padding: 0px 10px;
+        margin: 0px;
     }
 
     li.subcategory-mobile-li {
@@ -292,60 +345,20 @@
     }
 
     .subcategory-mobile-container {
-        background: white;
+        background: var(--e-global-color-secondary);
         display: block;
         position: absolute;
         left: 0;
-        top:40px;
+        top: 0;
+        bottom: 0;
         width: 100%;
         text-align: left;
         box-shadow: 0px 20px 25px -20px rgb(0 0 0 / 50%);
+        z-index: 9999;
     }
 
     .submenu-content-container {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .helpdesk {
-        width: 250px;
-        padding: 10px 20px;
-        background-color: var(--e-global-color-primary);
-        color: white;
-    }
-
-    .helpdesk-visible {
-        visibility: visible;
-    }
-
-    .helpdesk-hidden {
-        visibility: hidden;
-        transition-delay: 0.5s;
-    }
-
-    .helpdesk-header {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .helpdesk-list {
-        padding: 0;
-    }
-
-    .helpdesk-item,
-    .helpdesk-item a {
-        list-style-type: none;
-        color: white;
-        font-weight: 400;
-    }
-
-    .helpdesk-item span:hover,
-    .helpdesk-item a:hover {
-        color: lime;
-        cursor: pointer;
-        font-weight: 400;
+        height:100%;
     }
 
     .submenu-hidden {
@@ -356,8 +369,9 @@
         display: flex;
         list-style-type: none;
         padding: 5px 10px;
-        background-color: var(--e-global-color-secondary);
+        background-color: white;
         text-align: center;
+        border-radius: 3px;
     }
 
     li.mkbws-products-menu-mobile-li:hover {
@@ -379,9 +393,10 @@
         justify-content: center;
         font-size: 16px;
         font-weight: 500;
+        color: var(--e-global-color-text);
     }
 
-    .submenu-header {
+    .submenu-header-mobile {
         padding: 5px 20px;
         font-size: 14px;
     }
@@ -401,17 +416,30 @@
         transition-duration: 0.5s;
         opacity: 0;
     }
+
+    .mobile-menu-footer {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background-color: white;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        z-index: 999999;
+        height: 100px;
+        padding: 20px;
+    }
 </style>
 
 <script>
     document.addEventListener('alpine:init', () => {
         console.log("Alpine init");
-        Alpine.data('mobileMenu', () => ({
-            open: false,
-            toggle() {
-                console.log("Toggle from: ", this.open);
-                this.open = ! this.open
-            }
-        }))
+        // Alpine.data('mobileMenu', () => ({
+        //     mainmenuOpen: true,
+        //     toggle() {
+        //         this.open = ! this.open
+        //         console.log("Toggle to: ", this.open);
+        //     }
+        // }))
     })
 </script>
