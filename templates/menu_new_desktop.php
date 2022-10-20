@@ -11,7 +11,19 @@
             <!-- Main menu item -->
             <li class="mkbws-products-menu-li" 
                 data-id="<?php echo $category->term_id; ?>" 
-                x-data="{subMenuOpen : false, mouseAtSubmenu : false, mouseAtMainmenu  : false, timeoutLeave : null, timeoutEnterSub : null, submenuClose() {this.subMenuOpen = false}}" @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)" @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)">
+                x-data="{
+                    isTouched : false, 
+                    subMenuOpen : false, 
+                    mouseAtSubmenu : false, 
+                    mouseAtMainmenu  : false, 
+                    timeoutLeave : null, 
+                    timeoutEnterSub : null,
+                    categoryLink : '<?php echo get_category_link($category->term_id); ?>',
+                    submenuClose() {this.subMenuOpen = false}}" 
+                @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)" 
+                @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)"
+                @touchstart.passive="ifTouchStart()"
+                >
                 <div class="mkbws-menu-main-cat-dropdown">
                     <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
                         <div class="mkbws-main-menu-title">
@@ -287,6 +299,16 @@
 
         return (
             isBetweenOpenDays && isBetweenOpenHours )
+    }
+
+    let ifTouched = function(isTouched, categoryLink) {
+        console.log("Link: ", categoryLink, "isTouched: ", isTouched)
+        if (isTouched == true) return window.location.href = categoryLink
+        if (isTouched !== true) return ''
+    }
+
+    let ifTouchStart = function() {
+        console.log("ifTouchStart working");
     }
 
     document.addEventListener('alpine:init', () => {

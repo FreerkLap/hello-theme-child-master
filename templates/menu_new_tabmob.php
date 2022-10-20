@@ -39,7 +39,7 @@
     </div>
     </div>
     
-    <div id="mobile-menu-wrapper" x-show="mainMenu" @click.prevent="mainMenu && !subMenu ? mainMenu = false : ''">
+    <div id="mobile-menu-wrapper" x-show="mainMenu" x-cloak @click.prevent="mainMenu && !subMenu ? mainMenu = false : ''">
     </div>
 
     <div id="mkbws-products-menu-mobile" x-show="mainMenu" x-transition:enter-start="submenu-slideout" x-transition:enter-end="submenu-slidein" x-transition:leave-start="submenu-slidein" x-transition:leave-end="submenu-slideout">
@@ -117,9 +117,19 @@
             <?php endforeach ?>
         </ul>
         <div class="mobile-menu-footer">
-            <div>Item</div>
-            <div>item</div>
-            <div>item</div>
+            <div>
+                <a href="<?php echo home_url(); ?>">
+                    <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Terug naar home" width="50px"></i> 
+                </a>
+            </div>
+            <div @click="Belco.open(), mainMenu = false, subMenu = false">
+            <img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/chat-icon.svg" alt="Open chat" width="50px"></i> 
+            </div>
+            <div>
+                <a href="<?php echo home_url(); ?>/winkelwagen">
+                    <img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/winkelwagen-icon.svg" alt="Winkelwagen" width="50px"></i> 
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -275,7 +285,8 @@
         flex-wrap: nowrap;
         gap: 10px;
         flex-direction: column;
-        padding:10px;
+        padding: 10px;
+        height: calc(100vh - 150px);
         overflow-y: scroll;
     }
 
@@ -286,7 +297,7 @@
         gap: 0px;
         margin-top: auto;
         position: relative;
-        padding: 20px 10px;
+        padding: 10px 10px;
     }
 
     ul.subcategory-mobile {
@@ -337,7 +348,7 @@
         gap: 10px;
         font-size: 16px;
         transition-delay: 0.1s;
-        transition-duration: 0.3s;
+        transition-duration: 0.2s;
         box-shadow: 0px 0px 0px -5px black;
     }
 
@@ -408,20 +419,19 @@
 
     .submenu-enter {
         transition-delay: 0ms;
-        transition-duration: 0.5s;
+        transition-duration: 0.2s;
         opacity: 100;
     }
 
     .submenu-leave {
         transition-delay: 500ms;
-        transition-duration: 0.5s;
+        transition-duration: 0.2s;
         opacity: 0;
     }
 
     .mobile-menu-footer {
         width: 100%;
         position: absolute;
-        bottom: 0;
         background-color: white;
         display: flex;
         flex-direction: row;
@@ -429,6 +439,7 @@
         z-index: 999999;
         height: 100px;
         padding: 20px;
+        bottom: 0;
     }
 </style>
 
