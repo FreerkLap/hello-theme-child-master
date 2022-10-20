@@ -5,25 +5,25 @@
 -->
 <div id="mobile-menu-site-wrapper" x-data="{mainMenu : false, subMenu : false}">
     <div id="mkbws-mobile-header-wrapper">
-    <a href="https://sailspecials-staging.local" style="width:200px;">
-        <img width="200" height="auto" src="https://sailspecials-staging.local/wp-content/uploads/2021/09/sailspecials_liggend_wit.svg" 
+    <a href="<?php echo home_url(); ?>" style="width:200px;">
+        <img width="200" height="auto" src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/sailspecials_liggend_wit.svg" 
             class="attachment-medium size-medium" 
             alt="watersportwinkel voor zeilers" 
             loading="lazy">
     </a>
 
-    <form action="https://sailspecialsdev.local/" method="get" id="search_form_header" class="search-form-tablet">
+    <form action="<?php echo home_url(); ?>" method="get" id="search_form_header" class="search-form-tablet">
         <input type="text" name="s" placeholder="Zoek een product" id="live_search_header">
         <input type="hidden" name="post_type" value="product">
     </form>
     
 
     <div class="mkbws-mobile-header-menu-group">
-        <a  href="https://sailspecials-staging.local/my-account/" style="width:24px; height:24px;">
+        <a  href="<?php echo home_url(); ?>/my-account/" style="width:24px; height:24px;">
             <i class='fas fa-user-alt' style='font-size:24px; color:white;'></i>
         </a>
 
-        <a  href="https://sailspecials-staging.local/winkelwagen/" style="width:24px; height:24px;">
+        <a  href="<?php echo home_url(); ?>/winkelwagen/" style="width:24px; height:24px;">
             <i class="fas fa-shopping-cart" style='font-size:24px; color:white;'></i>
         </a>
 
@@ -124,7 +124,7 @@
     </div>
 </div>
 <!-- Mobile searchbar -->
-<form action="https://sailspecialsdev.local/" method="get" id="search_form_header" class="search-form-mobile">
+<form action="<?php echo home_url(); ?>" method="get" id="search_form_header" class="search-form-mobile">
         <input type="text" name="s" placeholder="Zoek een product" id="live_search_header">
         <input type="hidden" name="post_type" value="product">
 </form>
@@ -276,6 +276,7 @@
         gap: 10px;
         flex-direction: column;
         padding:10px;
+        overflow-y: scroll;
     }
 
     .mkbws-menu-main-cat-dropdown-mobile {
