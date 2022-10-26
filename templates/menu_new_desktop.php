@@ -4,46 +4,26 @@
     Using alpine.js for interactivity.
 -->
 
-<div id="" class=''>
+<div>
     <ul class="mkbws-products-menu">
         <?php foreach (get_mkb_wc_grouped_product_categories() as $category) : ?>
 
             <!-- Main menu item -->
-            <li class="mkbws-products-menu-li" 
-                data-id="<?php echo $category->term_id; ?>" 
-                x-data="{
-                    isTouched : false, 
-                    subMenuOpen : false, 
-                    mouseAtSubmenu : false, 
-                    mouseAtMainmenu  : false, 
-                    timeoutLeave : null, 
-                    timeoutEnterSub : null,
-                    categoryLink : '<?php echo get_category_link($category->term_id); ?>',
-                    submenuClose() {this.subMenuOpen = false}}" 
-                @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)" 
-                @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)"
-                @touchstart.passivehello-="ifTouchStart()"
-                >
+            <li class="mkbws-products-menu-li" data-id="<?php echo $category->term_id; ?>" x-data="{ isTouched : false, subMenuOpen : false, mouseAtSubmenu : false, mouseAtMainmenu  : false, timeoutLeave : null, timeoutEnterSub : null, categoryLink : '<?php echo get_category_link($category->term_id); ?>', submenuClose() {this.subMenuOpen = false}}" @mouseenter="mouseAtMainmenu = true, timeoutEnterSub = setTimeout(() => {subMenuOpen = true}, 290), clearTimeout(timeoutLeave)" @mouseleave="mouseAtMainmenu = false, timeoutLeave = setTimeout(() => {submenuClose()}, 300), clearTimeout(timeoutEnterSub)" @touchstart.outside="isTouched = false, subMenuOpen = false" @touchstart="isTouched = true, subMenuOpen = true">
                 <div class="mkbws-menu-main-cat-dropdown">
-                    <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
+                    <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item" @touchstart.prevent="isTouched">
                         <div class="mkbws-main-menu-title">
                             <?php echo $category->name; ?>
                         </div>
                     </a>
                     <!-- Dropdown chevron -->
-                    <i class="fas fa-chevron-down"></i>
+                    <i x-show="!subMenuOpen" class="fas fa-chevron-down" style="color: var(--e-global-color-47cd240); font-size: 10px;"></i>
+                    <i x-show="subMenuOpen" class="fas fa-chevron-up" style="color: var(--e-global-color-47cd240); font-size: 10px;"></i>
+
                 </div>
 
                 <!-- Submenu elements -->
-                <div 
-                    x-cloak
-                    x-show="subMenuOpen"
-                    @mouseenter="mouseAtSubmenu = true, mouseAtMainmenu = false, clearTimeout(timeoutLeave)" 
-                    @mouseleave="mouseAtSubmenu = false"
-                    class="subcategory-container" 
-                    id="mkbws-submenu-container-<?php echo $category->term_id; ?>" 
-                    data-id="submenu-<?php echo $category->term_id; ?>"
-                >
+                <div x-cloak x-show="subMenuOpen" @mouseenter="mouseAtSubmenu = true, mouseAtMainmenu = false, clearTimeout(timeoutLeave)" @mouseleave="mouseAtSubmenu = false" class="subcategory-container" id="mkbws-submenu-container-<?php echo $category->term_id; ?>" data-id="submenu-<?php echo $category->term_id; ?>">
                     <div class="submenu-header">
                         <span>
                             <a href="<?php echo home_url(); ?>">
@@ -84,15 +64,16 @@
                             </p>
                             <p x-show="!$store.officeHours.storeIsOpen">
                                 We zijn er 
-                                <b x-show="$store.officeHours.dayOfTheWeek >= 5 || $store.officeHours.dayOfTheWeek < 1 ">maandag</b>
-                                <b x-show="$store.officeHours.dayOfTheWeek >= 1 || $store.officeHours.dayOfTheWeek < 5 ">morgen</b>
+                                <b x-show="$store.officeHours.dayOfTheWeek >= 5 || $store.officeHours.dayOfTheWeek == 0">maandag</b>
+                                <b x-show="$store.officeHours.dayOfTheWeek >= 1 && $store.officeHours.dayOfTheWeek < 5 && $store.officeHours.hourOfTheDay > 16">morgen</b>
+                                <b x-show="($store.officeHours.dayOfTheWeek >= 1 || $store.officeHours.dayOfTheWeek <= 5) && $store.officeHours.hourOfTheDay < 9">vanmorgen</b>
                                 weer vanaf <b>09:00 uur</b>
                             </p>
                             <ul class="helpdesk-list">
-                                <li class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/telefoon-icon.svg" /> <a href="tel:+31757572600" id="helpdesk-call" target="_blank">075-7572600</a></li>
-                                <li class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/chat-icon.svg" /> <span onclick="Belco.open('chat')" id="helpdesk-chat">Chat starten </span></li>
-                                <li class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/whatsapp-icon.svg" /> <a href="https://wa.me/31757572600" id="helpdesk-whatsapp" target="_blank">WhatsApp</a></li>
-                                <li class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/email-icon.svg" /> <a href="mailto:info@sailspecials.nl" id="helpdesk-email" target="_blank">E-mail sturen</a></li>
+                                <li x-show="$store.officeHours.storeIsOpen" class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/telefoon-icon.svg" /> <a href="tel:+31757572600" id="helpdesk-call" target="_blank">075-7572600</a></li>
+                                <li x-show="$store.officeHours.storeIsOpen" class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/chat-icon-wit.svg" /> <span onclick="Belco.open('chat')" id="helpdesk-chat">Chat starten </span></li>
+                                <li x-show="$store.officeHours.storeIsOpen" class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/whatsapp-icon.svg" /> <a href="https://wa.me/31757572600" id="helpdesk-whatsapp" target="_blank">WhatsApp</a></li>
+                                <li class="helpdesk-item"><img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/email-icon-wit.svg" /> <a href="mailto:info@sailspecials.nl" id="helpdesk-email" target="_blank">E-mail sturen</a></li>
                             </ul>
 
                         </div>
@@ -165,7 +146,7 @@
     }
 
     li.subcategory-li:hover {
-        box-shadow: 0px 3px 10px -5px black;
+        box-shadow: 0px 3px 5px -5px black;
     }
 
     .subcategory-container {
@@ -254,8 +235,10 @@
         align-items: center;
         align-content: center;
         justify-content: center;
-        font-size: 16px;
-        font-weight: 500;
+        font-size: 15px;
+        font-weight: bold;
+        color: var(--e-global-color-text);
+        font-family: var(--e-global-typography-6cbb609-font-family);
     }
 
     .submenu-header {
@@ -285,7 +268,7 @@
 <script type="application/javascript" async>
     var officeTimes = {
         dailyOpenFrom : 9,
-        dailtOpenTo : 17,
+        dailtOpenTo : 16,
         weeklyOpenFrom : 1,
         weeklyOpenTo : 5,
         currentDate : function() {return new Date()},
@@ -301,20 +284,11 @@
             isBetweenOpenDays && isBetweenOpenHours )
     }
 
-    let ifTouched = function(isTouched, categoryLink) {
-        console.log("Link: ", categoryLink, "isTouched: ", isTouched)
-        if (isTouched == true) return window.location.href = categoryLink
-        if (isTouched !== true) return ''
-    }
-
-    let ifTouchStart = function() {
-        console.log("ifTouchStart working");
-    }
-
     document.addEventListener('alpine:init', () => {
         Alpine.store('officeHours', {
             storeIsOpen: isStoreOpen(),
-            dayOfTheWeek : officeTimes.currentDay()
+            dayOfTheWeek : officeTimes.currentDay(),
+            hourOfTheDay : officeTimes.currentHour(),
         })
     })
 </script>

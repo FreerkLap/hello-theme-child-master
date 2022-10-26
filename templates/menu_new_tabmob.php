@@ -12,8 +12,8 @@
             loading="lazy">
     </a>
 
-    <form action="<?php echo home_url(); ?>" method="get" id="search_form_header" class="search-form-tablet">
-        <input type="text" name="s" placeholder="Zoek een product" id="live_search_header">
+    <form action="<?php echo home_url(); ?>" method="get" id="search_form_header" class="search-form-tablet ">
+        <input type="text" name="s" placeholder="Wat zoek je?" id="live_search_header">
         <input type="hidden" name="post_type" value="product">
     </form>
     
@@ -27,7 +27,7 @@
             <i class="fas fa-shopping-cart" style='font-size:24px; color:white;'></i>
         </a>
 
-        <div id="mobile-menu" @click="mainMenu = !mainMenu">
+        <div id="mobile-menu" @click="mainMenu = !mainMenu, changeBelcoVis()" x-cloak>
             <div x-show="!mainMenu">    
                 <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 6h-24v-4h24v4zm0 4h-24v4h24v-4zm0 8h-24v4h24v-4z"/></svg>
             </div>        
@@ -39,10 +39,10 @@
     </div>
     </div>
     
-    <div id="mobile-menu-wrapper" x-show="mainMenu" x-cloak @click.prevent="mainMenu && !subMenu ? mainMenu = false : ''">
+    <div id="mobile-menu-wrapper" x-show="mainMenu" x-cloak @click.prevent="mainMenu && !subMenu ? (mainMenu = false,  changeBelcoVis) : ''">
     </div>
 
-    <div id="mkbws-products-menu-mobile" x-show="mainMenu" x-transition:enter-start="submenu-slideout" x-transition:enter-end="submenu-slidein" x-transition:leave-start="submenu-slidein" x-transition:leave-end="submenu-slideout">
+    <div id="mkbws-products-menu-mobile" x-cloak x-show="mainMenu" x-transition:enter-start="submenu-slideout" x-transition:enter-end="submenu-slidein" x-transition:leave-start="submenu-slidein" x-transition:leave-end="submenu-slideout">
         <div class="mobile-menu-header">
             <span>
                 <a href="<?php echo home_url(); ?>">
@@ -122,7 +122,7 @@
                     <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Terug naar home" width="50px"></i> 
                 </a>
             </div>
-            <div @click="Belco.open(), mainMenu = false, subMenu = false">
+            <div @click="changeBelcoVis(), mainMenu = false, subMenu = false, Belco.open()" :class="$store.officeHours.storeIsOpen ? 'mkbws-mobile-menu-chat-icon office-open' : 'mkbws-mobile-menu-chat-icon office-closed'">
             <img src="<?php echo home_url(); ?>/wp-content/themes/hello-theme-child-master/images/chat-icon.svg" alt="Open chat" width="50px"></i> 
             </div>
             <div>
@@ -135,7 +135,7 @@
 </div>
 <!-- Mobile searchbar -->
 <form action="<?php echo home_url(); ?>" method="get" id="search_form_header" class="search-form-mobile">
-        <input type="text" name="s" placeholder="Zoek een product" id="live_search_header">
+        <input type="text" name="s" placeholder="Wat zoek je?" id="live_search_header">
         <input type="hidden" name="post_type" value="product">
 </form>
 
@@ -194,11 +194,37 @@
         display: block;
         padding: 10px;
         background-color: var(--e-global-color-secondary);
+        position: relative;
     }
 
     .search-form-tablet {
+        position: relative;
         width: 100%;
-        max-width: 500px;
+    }
+
+    .search-form-tablet:after {
+        content: url('wp-content/themes/hello-theme-child-master/images/search-icon.svg');
+        position: absolute;
+        top: 10px;
+        right: 5px;
+    }
+
+    .search-form-mobile:after {
+        content: url('wp-content/themes/hello-theme-child-master/images/search-icon.svg');
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+    
+    .search-form-tablet input[type=date], .search-form-tablet input[type=email], .search-form-tablet input[type=number], .search-form-tablet input[type=password], .search-form-tablet input[type=search], .search-form-tablet input[type=tel], .search-form-tablet input[type=text], .search-form-tablet input[type=url], .search-form-tablet select, .search-form-tablet textarea,
+    .search-form-mobile input[type=date], .search-form-mobile input[type=email], .search-form-mobile input[type=number], .search-form-mobile input[type=password], .search-form-mobile input[type=search], .search-form-mobile input[type=tel], .search-form-mobile input[type=text], .search-form-mobile input[type=url], .search-form-mobile select, .search-form-mobile textarea {
+        width: 100%;
+        border: 2px solid var(--e-global-color-text);
+        border-radius: 5px;
+        padding: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--e-global-color-text);
     }
 
 
@@ -347,13 +373,6 @@
         align-content: center;
         gap: 10px;
         font-size: 16px;
-        transition-delay: 0.1s;
-        transition-duration: 0.2s;
-        box-shadow: 0px 0px 0px -5px black;
-    }
-
-    li.subcategory-mobile-li:hover {
-        box-shadow: 0px 3px 10px -5px black;
     }
 
     .subcategory-mobile-container {
@@ -441,17 +460,37 @@
         padding: 20px;
         bottom: 0;
     }
+
+    .office-open::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background-color: var( --e-global-color-accent );
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    .office-closed::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background-color: var(--e-global-color-ca4ec4b);
+        border-radius:50%;
+        position: absolute;
+    }
 </style>
 
-<script>
-    document.addEventListener('alpine:init', () => {
-        console.log("Alpine init");
-        // Alpine.data('mobileMenu', () => ({
-        //     mainmenuOpen: true,
-        //     toggle() {
-        //         this.open = ! this.open
-        //         console.log("Toggle to: ", this.open);
-        //     }
-        // }))
-    })
+<script type="text/javascript" defer>
+    let belcoVis = true
+    let changeBelcoVis = function() {
+        belcoVis = !belcoVis
+        if (belcoVis == false) {
+            const belcoContainer = document.getElementById('belco-container')
+            belcoContainer.style.display = 'none';
+        } else {
+            const belcoContainer = document.getElementById('belco-container')
+            belcoContainer.style.display = '';
+
+        }
+    }
 </script>

@@ -258,9 +258,6 @@ function mkbws_checkout_cart_totals()
 	exit();
 }
 
-add_filter('show_admin_bar', '__return_false');
-
-
 add_action( 'wp_ajax_mkbws_checkout_cart_totals', 'mkbws_checkout_cart_totals');
 add_action( 'wp_ajax_nopriv_mkbws_checkout_cart_totals', 'mkbws_checkout_cart_totals');
 // Einde Custom Woo Checkout script
