@@ -28,10 +28,10 @@
         </a>
 
         <div id="mobile-menu" @click="mainMenu = !mainMenu, changeBelcoVis()" x-cloak>
-            <div x-show="!mainMenu">    
+            <div class="mobile-menu-main-btn" x-show="!mainMenu">    
                 <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 6h-24v-4h24v4zm0 4h-24v4h24v-4zm0 8h-24v4h24v-4z"/></svg>
             </div>        
-            <div x-show="mainMenu">
+            <div class="mobile-menu-main-btn" x-show="mainMenu">
             <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/></svg>
             </div>
             <span>Menu</span>
@@ -44,49 +44,45 @@
 
     <div id="mkbws-products-menu-mobile" x-cloak x-show="mainMenu" x-transition:enter-start="submenu-slideout" x-transition:enter-end="submenu-slidein" x-transition:leave-start="submenu-slidein" x-transition:leave-end="submenu-slideout">
         <div class="mobile-menu-header">
-            <span>
+            <span class="mobile-menu-back-title">
                 <a href="<?php echo home_url(); ?>">
-                    <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Home" width="15px"></i> 
                     <i class="fas fa-chevron-left"></i>
-                    Home
+                    Terug naar home
                 </a>
             </span>
 
-            <div @click.prevent="mainMenu = false, subMenu = false" style="cursor:pointer; padding:10px 10px 0px 10px;">
+            <div @click.prevent="mainMenu = false, subMenu = false, changeBelcoVis()" style="cursor:pointer; padding:10px 10px 0px 10px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/>
+                    <path fill="#777777" d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/>
                 </svg>
             </div>
         </div>
         <ul class="mkbws-products-menu-mobile">
-            <h3>Product categorieën</h3>
             <?php foreach (get_mkb_wc_grouped_product_categories() as $category) : ?>
 
-                <!-- Main menu item -->
                 <li class="mkbws-products-menu-mobile-li" data-id="<?php echo $category->term_id; ?>" x-data="{submenuOpen : false}" @click.self="submenuOpen = true, subMenu = true">
                     <div class="mkbws-menu-main-cat-dropdown-mobile" @click.prevent="submenuOpen = true, subMenu = true">
                         <a href="<?php echo get_category_link($category->term_id); ?>" class="menu-link menu-link-item">
                             <div class="mkbws-main-menu-title">
+                                <img src="<?php echo $category->image[0]; ?>" width="50" height="50" style="margin-left: -20px;" alt="Categorie <?php echo $category->name; ?>" />
                                 <?php echo $category->name; ?>
                             </div>
                         </a>
-                        <!-- Dropdown chevron -->
+
                         <i class="fas fa-chevron-right" style="margin-left: 10px; color:var(--e-global-color-secondary)"></i>
 
                     </div>
 
-                    <!-- Submenu elements -->
                     <div x-cloak x-show="submenuOpen" @click.outside="submenuOpen = false, subMenu = false" x-transition:enter-start="submenu-slideout" x-transition:enter-end="submenu-slidein" x-transition:leave-start="submenu-slidein" x-transition:leave-end="submenu-slideout" class="subcategory-mobile-container" id="mkbws-submenu-container-<?php echo $category->term_id; ?>" data-id="submenu-<?php echo $category->term_id; ?>">
                         <div class="mobile-menu-header" @click="submenuOpen = false, subMenu = false">
-                            <span>
-                                <img src="<?php echo home_url(); ?>/wp-content/uploads/2022/04/Home.svg" alt="Home" width="15px"></i> 
+                            <span class="mobile-menu-back-title">
                                 <i class="fas fa-chevron-left"></i>
-                                Alle categorieën
+                                Terug
                             </span>
 
-                            <div style="cursor:pointer; padding:10px 10px 0px 10px;" @click.prevent.stop="mainMenu = false, subMenu = false">
+                            <div style="cursor:pointer; padding:10px 10px 0px 10px;" class="mobile-menu-close-button" @click.prevent.stop="subMenu = false, submenuOpen = false, changeBelcoVis(), mainMenu = false">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                    <path d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/>
+                                    <path fill="#777777" d="M23 20.168l-8.185-8.187 8.185-8.174-2.832-2.807-8.182 8.179-8.176-8.179-2.81 2.81 8.186 8.196-8.186 8.184 2.81 2.81 8.203-8.192 8.18 8.192z"/>
                                 </svg>
                             </div>
                         </div>
@@ -94,7 +90,7 @@
                         <div class="submenu-content-container">
                             <ul class="subcategory-mobile">
                             <a href="<?php echo get_category_link($category->term_id); ?>">
-                                <h3>
+                                <h3 style="font-size:20px;">
                                         <?php echo $category->name; ?>
                                 </h3>
                             </a>
@@ -134,8 +130,8 @@
     </div>
 </div>
 <!-- Mobile searchbar -->
-<form action="<?php echo home_url(); ?>" method="get" id="search_form_header" class="search-form-mobile">
-        <input type="text" name="s" placeholder="Wat zoek je?" id="live_search_header">
+<form action="<?php echo home_url(); ?>/zoekresultaten/" method="get" id="search_form_header" class="search-form-mobile">
+        <input type="text" name="searchterm" placeholder="Wat zoek je?" id="live_search_header">
         <input type="hidden" name="post_type" value="product">
 </form>
 
@@ -197,6 +193,10 @@
         position: relative;
     }
 
+    .search-form-mobile input::placeholder, .search-form-tablet input::placeholder  {
+        color: var(--e-global-color-text);
+    }
+
     .search-form-tablet {
         position: relative;
         width: 100%;
@@ -219,7 +219,7 @@
     .search-form-tablet input[type=date], .search-form-tablet input[type=email], .search-form-tablet input[type=number], .search-form-tablet input[type=password], .search-form-tablet input[type=search], .search-form-tablet input[type=tel], .search-form-tablet input[type=text], .search-form-tablet input[type=url], .search-form-tablet select, .search-form-tablet textarea,
     .search-form-mobile input[type=date], .search-form-mobile input[type=email], .search-form-mobile input[type=number], .search-form-mobile input[type=password], .search-form-mobile input[type=search], .search-form-mobile input[type=tel], .search-form-mobile input[type=text], .search-form-mobile input[type=url], .search-form-mobile select, .search-form-mobile textarea {
         width: 100%;
-        border: 2px solid var(--e-global-color-text);
+        border: 1px solid var(--e-global-color-text);
         border-radius: 5px;
         padding: 5px;
         font-size: 16px;
@@ -243,7 +243,7 @@
     #mkbws-products-menu-mobile {
         position: fixed;
         top: 0;
-        bottom: 0;
+        height: 100%;
         right: 0;
         width: 100%;
         max-width: 330px;
@@ -251,7 +251,7 @@
         z-index: 2147483000;
     }
 
-    @media screen and (min-width: 1131px) {
+    @media screen and (min-width: 1191px) {
         #mkbws-products-menu-mobile, .mobile-menu {
             display: none;
         }
@@ -291,6 +291,11 @@
         font-weight: 600;
     }
 
+    .mobile-menu-back-title {
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
     .mobile-menu-header a {
         font-weight: 600;
 
@@ -312,8 +317,9 @@
         gap: 10px;
         flex-direction: column;
         padding: 10px;
-        height: calc(100vh - 150px);
+        height: calc(100% - 150px);
         overflow-y: scroll;
+        position: static;
     }
 
     .mkbws-menu-main-cat-dropdown-mobile {
@@ -324,6 +330,11 @@
         margin-top: auto;
         position: relative;
         padding: 10px 10px;
+        align-items: center;
+    }
+
+    .mobile-menu-main-btn {
+        margin-bottom: -5px;
     }
 
     ul.subcategory-mobile {
@@ -338,7 +349,7 @@
         overflow-y: scroll;
         gap: 10px;
         z-index: 999;
-        height: calc(100vh - 150px);
+        height: calc(100% - 150px);
     }
 
     .submenu-slideout {
@@ -477,6 +488,11 @@
         background-color: var(--e-global-color-ca4ec4b);
         border-radius:50%;
         position: absolute;
+    }
+
+    /* Adjustments for other plugins */
+    .clerk-slider-nav {
+        z-index: 10 !important;
     }
 </style>
 

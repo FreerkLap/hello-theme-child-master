@@ -16,13 +16,11 @@
                             <?php echo $category->name; ?>
                         </div>
                     </a>
-                    <!-- Dropdown chevron -->
                     <i x-show="!subMenuOpen" class="fas fa-chevron-down" style="color: var(--e-global-color-47cd240); font-size: 10px;"></i>
                     <i x-show="subMenuOpen" class="fas fa-chevron-up" style="color: var(--e-global-color-47cd240); font-size: 10px;"></i>
 
                 </div>
 
-                <!-- Submenu elements -->
                 <div x-cloak x-show="subMenuOpen" @mouseenter="mouseAtSubmenu = true, mouseAtMainmenu = false, clearTimeout(timeoutLeave)" @mouseleave="mouseAtSubmenu = false" class="subcategory-container" id="mkbws-submenu-container-<?php echo $category->term_id; ?>" data-id="submenu-<?php echo $category->term_id; ?>">
                     <div class="submenu-header">
                         <span>
@@ -154,7 +152,7 @@
         display: block;
         position: absolute;
         left: 0;
-        top:40px;
+        top:36px;
         width: 100%;
         text-align: left;
         box-shadow: 0px 20px 25px -20px rgb(0 0 0 / 50%);
@@ -214,8 +212,8 @@
         display: flex;
         list-style-type: none;
         padding: 5px 10px;
-        background-color: var(--e-global-color-secondary);
         text-align: center;
+        transition: background-color 0.2s ease-in-out 0.3s;
     }
 
     li.mkbws-products-menu-li:hover {
