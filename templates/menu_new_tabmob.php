@@ -104,6 +104,7 @@
                                     </a>
 
                                 <?php endforeach ?>
+
                             </ul>
 
 
@@ -111,6 +112,12 @@
                     </div>
                 </li>
             <?php endforeach ?>
+
+            <?php wp_nav_menu( array(
+                'menu' => 'Minor menu',
+                'depth' => '1'
+            )) ?>
+
         </ul>
         <div class="mobile-menu-footer">
             <div>
@@ -140,6 +147,26 @@
         display: none !important;
     }
 
+    /* Extra menu */
+    ul#menu-minor-menu li {
+        display: block;
+    }
+    ul#menu-minor-menu li a {
+        color: var(--e-global-color-primary);
+        font-weight: bold;
+        font-size: 20px;
+        font-family: var(--e-global-typography-6cbb609-font-family);
+    }
+    ul#menu-minor-menu {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 20px;
+    }
+
+
+    /* General menu styling */
     #mkbws-mobile-header-wrapper {
         display: flex;
         flex-direction: row;
@@ -150,6 +177,8 @@
         align-items: center;
         gap: 20px;
     }
+
+    
 
     #mobile-menu-wrapper {
         position: fixed;
